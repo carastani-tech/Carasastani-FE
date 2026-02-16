@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
-import BackButtonHandler from './components/common/BackButtonHandler';
 import Home from './pages/Home';
 import UsedCars from './pages/UsedCars';
 import Ads from './pages/Ads';
@@ -15,7 +14,6 @@ import Careers from './pages/Careers';
 function App() {
   return (
     <Router>
-      <BackButtonHandler />
       <div className="flex flex-col min-h-screen font-sans">
         <Navbar />
         <div className="flex-grow pt-[52px] sm:pt-[60px]">
