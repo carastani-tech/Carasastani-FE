@@ -2,7 +2,7 @@ name: Deploy to Docker Hub
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "qa" ]
   workflow_dispatch:
 
 jobs:
@@ -27,6 +27,8 @@ jobs:
         with:
           context: .
           push: true
+          build-args: |
+             BUILD_CMD=build:qa
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/carastani-frontend:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/carastani-frontend:${{ github.sha }}
