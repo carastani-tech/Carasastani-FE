@@ -1,14 +1,12 @@
-name: Deploy to Docker Hub
-
+name: Deploy Frontend QA
 on:
   push:
     branches: [ "qa" ]
   workflow_dispatch:
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -28,7 +26,33 @@ jobs:
           context: .
           push: true
           build-args: |
-             BUILD_CMD=build:qa
+            BUILD_CMD=build:qa
+            VITE_API_URL=https://carastani-qa.duckdns.org/api/v1
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/carastani-frontend:qa
             ${{ secrets.DOCKERHUB_USERNAME }}/carastani-frontend:${{ github.sha }}
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            # Pull latest image
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/carastani-frontend:qa
+            
+            # Stop and remove old container
+            docker stop carastani-frontend-qa || true
+            docker rm carastani-frontend-qa || true
+            
+            # Start new container
+            docker run -d \
+              --name carastani-frontend-qa \
+              --restart always \
+              -p 3000:80 \
+              ${{ secrets.DOCKERHUB_USERNAME }}/carastani-frontend:qa
+            
+            # Verify container is running
+            docker ps | grep carastani-frontend-qa
+            echo "Frontend deployed successfully!"
