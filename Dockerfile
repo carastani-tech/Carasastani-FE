@@ -7,9 +7,11 @@ COPY package.json package-lock.json ./
 
 RUN npm install
 
+ARG BUILD_CMD="build"
+
 COPY . .
 
-RUN npm run build
+RUN npm run ${BUILD_CMD}
 
 # Stage 2: Serve the application with Nginx
 FROM nginx:alpine
