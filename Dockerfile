@@ -4,7 +4,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install
 ARG BUILD_CMD=build
-ARG VITE_API_URL=https://carastani-qa.duckdns.org/api/v1
+ARG VITE_API_URL=https://carastani-qa.duckdns.org
 ENV VITE_API_URL=$VITE_API_URL
 COPY . .
 RUN npm run $BUILD_CMD
