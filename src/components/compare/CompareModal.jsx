@@ -91,7 +91,7 @@ const CompareModal = ({ cars, onClose }) => {
             };
 
             // Call backend API
-            const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:9091'}/api/v1/reports/comparison`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:9091'}/reports/comparison`, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/pdf',

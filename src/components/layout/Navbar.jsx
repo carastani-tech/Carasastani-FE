@@ -24,7 +24,7 @@ const Navbar = () => {
     useEffect(() => {
         const fetchCities = async () => {
             try {
-                const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:9091'}/api/master-data/city`);
+                const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:9091'}/master-data/city`);
                 const data = await response.json();
                 if (data && data.length > 0 && data[0].metadata) {
                     setCities(data[0].metadata);

@@ -299,7 +299,7 @@ const ScoreReportModal = ({ car, scoreData, onClose }) => {
             };
 
             // Call backend API
-            const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:9091'}/api/v1/reports/score`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:9091'}/reports/score`, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/pdf',

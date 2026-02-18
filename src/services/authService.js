@@ -3,7 +3,7 @@
  * Handles user login/logout and session management using localStorage
  */
 
-const API_BASE = `${import.meta.env.VITE_API_URL || 'http://localhost:9091'}/api/users`;
+const API_BASE = `${import.meta.env.VITE_API_URL || 'http://localhost:9091'}/users`;
 const USER_STORAGE_KEY = 'loggedInUser';
 
 /**

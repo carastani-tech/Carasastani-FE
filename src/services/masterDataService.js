@@ -1,6 +1,6 @@
 import { defaultImage } from '../config/browseImages';
 
-const API_BASE = `${import.meta.env.VITE_API_URL || 'http://localhost:9091'}/api/master-data`;
+const API_BASE = `${import.meta.env.VITE_API_URL || 'http://localhost:9091'}/master-data`;
 const SEARCH_API = `${import.meta.env.VITE_API_URL || 'http://localhost:9091'}/carastani`;
 
 const normalizeMetadata = (apiResponse) => {

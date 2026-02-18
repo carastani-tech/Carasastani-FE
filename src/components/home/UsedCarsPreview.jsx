@@ -211,19 +211,19 @@ const UsedCarsPreview = () => {
     useEffect(() => {
         const loadMasterData = async () => {
             try {
-                const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:9091'}/api/master-data/manufacturer`);
+                const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:9091'}/master-data/manufacturer`);
                 const manufacturersData = await response.json();
                 const manufacturers = manufacturersData[0]?.metadata || [];
 
-                const fuelResponse = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:9091'}/api/master-data/fuel`);
+                const fuelResponse = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:9091'}/master-data/fuel`);
                 const fuelData = await fuelResponse.json();
                 const fuelTypes = fuelData[0]?.metadata || [];
 
-                const transResponse = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:9091'}/api/master-data/transmission`);
+                const transResponse = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:9091'}/master-data/transmission`);
                 const transData = await transResponse.json();
                 const transmissions = transData[0]?.metadata || [];
 
-                const cityResponse = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:9091'}/api/master-data/city`);
+                const cityResponse = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:9091'}/master-data/city`);
                 const cityData = await cityResponse.json();
                 const cities = cityData[0]?.metadata || [];
 
