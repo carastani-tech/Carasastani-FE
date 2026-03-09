@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Car, Calendar, IndianRupee, Tag, Loader2, Zap, ArrowRight } from 'lucide-react';
 import { fetchBodyTypes, fetchManufacturers, fetchBuildYears } from '../../services/masterDataService';
+import { useNavigate } from 'react-router-dom';
 import {
     bodyTypeImages,
     brandImages,
@@ -11,6 +12,7 @@ import {
 } from '../../config/browseImages';
 
 const BrowseByType = () => {
+    const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('type');
     const [isExpanded, setIsExpanded] = useState(false);
     const [bodyTypes, setBodyTypes] = useState([]);
@@ -43,7 +45,7 @@ const BrowseByType = () => {
         if (type === 'year') params.set('buildYear', value);
         if (type === 'budget') params.set('priceRange', value);
         if (type === 'engine') params.set('engine', value);
-        window.location.href = `/used?${params.toString()}`;
+        navigate(`/used?${params.toString()}`);
     };
 
     const handleToggleExpand = () => {

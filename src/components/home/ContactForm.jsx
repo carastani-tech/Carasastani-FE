@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Send, MapPin, Phone, Mail, ArrowRight, Sparkles } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const ContactForm = () => {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -178,7 +180,7 @@ const ContactForm = () => {
                         </h3>
                         <p className="text-gray-300 mb-6">Join thousands of happy customers who found their perfect ride with Carastani</p>
                         <button
-                            onClick={() => window.location.href = '/used'}
+                            onClick={() => navigate('/used')}
                             className="inline-flex items-center gap-2 bg-accent hover:bg-red-600 text-white font-semibold px-8 py-4 rounded-full transition-all duration-300 hover:gap-4"
                         >
                             Start Exploring

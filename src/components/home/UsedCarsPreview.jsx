@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, MapPin, Fuel, ChevronRight, Gauge, ExternalLink, Calendar, ArrowUpDown, X, Check, Scale, ChevronLeft, Star, Settings, Car } from 'lucide-react';
 import { searchCars } from '../../services/masterDataService';
 import { CarScoreBar } from '../common/CarScore';
+import CarDetailPopup from '../common/CarDetailPopup';
 import { calculateCarastaniScore } from '../../utils/carastaniScore';
 import { getSelectedCity } from '../../utils/cityStorage';
 import CompareModal from '../compare/CompareModal';
@@ -29,142 +31,9 @@ const FALLBACK_IMAGES = [
 const CITIES = ['New Delhi', 'Mumbai', 'Bangalore', 'Chennai', 'Hyderabad', 'Pune', 'Kolkata', 'Ahmedabad'];
 const currentYear = new Date().getFullYear();
 
-// Car Details Modal for showing full car info
-const CarDetailsModal = ({ car, onClose }) => {
-    const sellerStyle = SELLER_STYLES[car.seller] || SELLER_STYLES['Cars24'];
-    const scoreData = calculateCarastaniScore(car);
-
-    const formatPrice = (price) => {
-        return new Intl.NumberFormat('en-IN', {
-            style: 'currency',
-            currency: 'INR',
-            maximumFractionDigits: 0
-        }).format(price);
-    };
-
-    return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
-            <div className="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
-            <div
-                className="relative bg-white rounded-3xl shadow-2xl max-w-lg w-full overflow-hidden animate-scale-in"
-                onClick={e => e.stopPropagation()}
-            >
-                {/* Close Button */}
-                <button
-                    onClick={onClose}
-                    className="absolute top-4 right-4 z-10 w-10 h-10 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white transition-colors"
-                >
-                    <X size={20} />
-                </button>
-
-                {/* Car Image */}
-                <div className="relative h-48 bg-gray-100">
-                    <img
-                        src={car.image}
-                        alt={car.name}
-                        className="w-full h-full object-cover"
-                        onError={(e) => { e.target.src = FALLBACK_IMAGES[0]; }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-
-                    {/* Year and Seller badges */}
-                    <span className="absolute top-3 left-3 bg-black/70 text-white text-xs font-bold px-3 py-1 rounded-full">
-                        {car.year}
-                    </span>
-                    <span className={`absolute top-3 right-14 ${sellerStyle.bg} ${sellerStyle.text} text-xs font-bold px-3 py-1 rounded-full`}>
-                        {car.seller}
-                    </span>
-                </div>
-
-                {/* Content */}
-                <div className="p-6">
-                    {/* Title and Price */}
-                    <div className="flex items-start justify-between mb-4">
-                        <div>
-                            <h2 className="text-xl font-bold text-gray-900">{car.name}</h2>
-                            <p className="text-gray-500 text-sm">{car.bodyType || 'Sedan'} • {car.location}</p>
-                        </div>
-                        <div className="text-right">
-                            <p className="text-2xl font-bold text-primary">{formatPrice(car.price)}</p>
-                            <p className="text-xs text-gray-400">onwards</p>
-                        </div>
-                    </div>
-
-                    {/* Quick Specs Grid */}
-                    <div className="grid grid-cols-4 gap-3 mb-5">
-                        <div className="bg-gray-50 rounded-xl p-3 text-center">
-                            <Calendar size={18} className="mx-auto text-primary mb-1" />
-                            <p className="text-[10px] text-gray-400">Year</p>
-                            <p className="text-sm font-bold text-gray-900">{car.year}</p>
-                        </div>
-                        <div className="bg-gray-50 rounded-xl p-3 text-center">
-                            <Gauge size={18} className="mx-auto text-primary mb-1" />
-                            <p className="text-[10px] text-gray-400">Mileage</p>
-                            <p className="text-sm font-bold text-gray-900">{car.mileage ? `${(car.mileage / 1000).toFixed(0)}K` : 'N/A'}</p>
-                        </div>
-                        <div className="bg-gray-50 rounded-xl p-3 text-center">
-                            <Fuel size={18} className="mx-auto text-primary mb-1" />
-                            <p className="text-[10px] text-gray-400">Fuel</p>
-                            <p className="text-sm font-bold text-gray-900">{car.fuelType || car.fuel_type || 'Petrol'}</p>
-                        </div>
-                        <div className="bg-gray-50 rounded-xl p-3 text-center">
-                            <Settings size={18} className="mx-auto text-primary mb-1" />
-                            <p className="text-[10px] text-gray-400">Trans.</p>
-                            <p className="text-sm font-bold text-gray-900">{car.transmission || 'Manual'}</p>
-                        </div>
-                    </div>
-
-                    {/* Carastani Score */}
-                    <div className="mb-5 p-4 bg-gray-50 rounded-xl">
-                        <div className="flex items-center justify-between mb-2">
-                            <span className="text-sm font-semibold text-gray-700">Carastani Score</span>
-                            <div className="flex items-center gap-2">
-                                <span
-                                    className="text-lg font-bold px-3 py-1 rounded-full"
-                                    style={{ backgroundColor: `${scoreData.gradeColor}20`, color: scoreData.gradeColor }}
-                                >
-                                    {scoreData.score}/100
-                                </span>
-                                <span
-                                    className="text-xs font-bold px-2 py-1 rounded-full"
-                                    style={{ backgroundColor: `${scoreData.gradeColor}20`, color: scoreData.gradeColor }}
-                                >
-                                    {scoreData.grade}
-                                </span>
-                            </div>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div
-                                className="h-2 rounded-full transition-all duration-500"
-                                style={{ width: `${scoreData.score}%`, backgroundColor: scoreData.gradeColor }}
-                            ></div>
-                        </div>
-                    </div>
-
-                    {/* Action Buttons */}
-                    <div className="flex gap-3">
-                        <button
-                            onClick={() => window.location.href = '/used'}
-                            className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-3 rounded-xl transition-colors flex items-center justify-center gap-2"
-                        >
-                            <Scale size={18} />
-                            Compare
-                        </button>
-                        <button
-                            onClick={() => window.open(car.sourceUrl || '/used', '_blank')}
-                            className={`flex-1 ${sellerStyle.bg} hover:opacity-90 ${sellerStyle.text} font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2`}
-                        >
-                            <ExternalLink size={18} />
-                            View on {car.seller}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-};
 
 const UsedCarsPreview = () => {
+    const navigate = useNavigate();
     const [cars, setCars] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedCars, setSelectedCars] = useState([]);
@@ -336,7 +205,7 @@ const UsedCarsPreview = () => {
                         <p className="text-gray-600 text-sm sm:text-base mt-2 sm:mt-3">Aggregated from top platforms across India</p>
                     </div>
                     <button
-                        onClick={() => window.location.href = '/used'}
+                        onClick={() => navigate('/used')}
                         className="mt-4 md:mt-0 flex items-center gap-2 bg-secondary hover:bg-secondary/90 text-white font-bold px-5 sm:px-8 py-3 sm:py-4 rounded-full transition-all hover:gap-4 hover:shadow-lg text-sm sm:text-base"
                     >
                         View All Cars
@@ -599,11 +468,11 @@ const UsedCarsPreview = () => {
                     <div className="relative z-10 flex flex-wrap items-center justify-center gap-4 md:gap-0 md:justify-between">
                         {/* Stats */}
                         <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8">
-                            <a href="/used" className="group flex items-center gap-2 hover:scale-105 transition-transform">
+                            <Link to="/used" className="group flex items-center gap-2 hover:scale-105 transition-transform">
                                 <Car size={18} className="text-accent" />
                                 <span className="text-white font-bold">10K+</span>
                                 <span className="text-white/60 text-sm hidden sm:inline">Cars</span>
-                            </a>
+                            </Link>
 
                             <span className="hidden md:block w-1 h-1 rounded-full bg-white/30"></span>
 
@@ -631,13 +500,13 @@ const UsedCarsPreview = () => {
                         </div>
 
                         {/* CTA Button */}
-                        <a
-                            href="/used"
+                        <Link
+                            to="/used"
                             className="bg-white hover:bg-accent text-secondary hover:text-black font-bold px-5 py-2.5 rounded-full text-sm flex items-center gap-2 transition-all shadow-lg hover:shadow-accent/20"
                         >
                             Compare Now
                             <ChevronRight size={16} />
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </div>
@@ -652,7 +521,7 @@ const UsedCarsPreview = () => {
 
             {/* Car Details Modal */}
             {selectedCar && (
-                <CarDetailsModal
+                <CarDetailPopup
                     car={selectedCar}
                     onClose={() => setSelectedCar(null)}
                 />

@@ -59,6 +59,18 @@ const Navbar = () => {
         };
     }, []);
 
+    // Listen for external city changes (e.g. from the city selection popup)
+    useEffect(() => {
+        const handleCityChange = (event) => {
+            if (event.detail) {
+                setSelectedCityState(event.detail);
+            }
+        };
+
+        window.addEventListener('cityChange', handleCityChange);
+        return () => window.removeEventListener('cityChange', handleCityChange);
+    }, []);
+
     // Close dropdowns when clicking outside
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -92,6 +104,9 @@ const Navbar = () => {
         setSelectedCity(city.value);
         setIsDropdownOpen(false);
         setSearchQuery('');
+
+        // Dispatch custom event so other pages (e.g. UsedCars) can react
+        window.dispatchEvent(new CustomEvent('cityChange', { detail: city.value }));
     };
 
     const handleLogout = () => {

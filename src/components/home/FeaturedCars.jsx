@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Heart, Eye, X, ChevronLeft, ChevronRight, Check, Scale, Fuel, Gauge, Calendar, Star, Sparkles } from 'lucide-react';
 import { CarScoreBar } from '../common/CarScore';
+import CarDetailPopup from '../common/CarDetailPopup';
 
 // Reliable car images with fallbacks
 const FEATURED_CARS = [
@@ -119,6 +121,7 @@ const SELLER_COLORS = {
 };
 
 const FeaturedCars = () => {
+    const navigate = useNavigate();
     const [selectedCar, setSelectedCar] = useState(null);
     const [selectedForCompare, setSelectedForCompare] = useState([]);
     const scrollRef = useRef(null);
@@ -159,7 +162,7 @@ const FeaturedCars = () => {
                         <p className="text-gray-500 mt-2 text-sm md:text-base">Premium verified cars from trusted sellers</p>
                     </div>
                     <button
-                        onClick={() => window.location.href = '/used'}
+                        onClick={() => navigate('/used')}
                         className="flex items-center gap-2 bg-secondary hover:bg-secondary/90 text-white font-semibold text-sm md:text-base px-5 py-2.5 md:px-6 md:py-3 rounded-full transition-all hover:gap-4"
                     >
                         View All
@@ -260,7 +263,7 @@ const FeaturedCars = () => {
 
             {/* Car Details Modal */}
             {selectedCar && (
-                <CarDetailsModal car={selectedCar} onClose={() => setSelectedCar(null)} />
+                <CarDetailPopup car={selectedCar} onClose={() => setSelectedCar(null)} />
             )}
 
             {/* Marquee animation styles */}
@@ -281,74 +284,6 @@ const FeaturedCars = () => {
                 }
             `}</style>
         </section>
-    );
-};
-
-// Simple Details Modal
-const CarDetailsModal = ({ car, onClose }) => {
-    return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose}></div>
-            <div className="relative bg-white rounded-3xl shadow-2xl max-w-2xl w-full overflow-hidden">
-                <button
-                    onClick={onClose}
-                    className="absolute top-4 right-4 z-10 w-10 h-10 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white"
-                >
-                    <X size={20} />
-                </button>
-
-                <div className="h-64 bg-gray-100">
-                    <img src={car.image} alt={car.model} className="w-full h-full object-cover" />
-                </div>
-
-                <div className="p-6">
-                    <div className="flex items-start justify-between mb-4">
-                        <div>
-                            <p className="text-sm text-gray-500">{car.make}</p>
-                            <h2 className="text-2xl font-bold">{car.model} {car.variant}</h2>
-                        </div>
-                        <span className={`${SELLER_COLORS[car.seller]?.bg} ${SELLER_COLORS[car.seller]?.text} text-sm font-bold px-4 py-2 rounded-full`}>
-                            {car.seller}
-                        </span>
-                    </div>
-
-                    <div className="grid grid-cols-3 gap-4 mb-6">
-                        <div className="bg-gray-50 rounded-xl p-4 text-center">
-                            <Calendar size={20} className="mx-auto text-primary mb-1" />
-                            <p className="text-sm text-gray-500">Year</p>
-                            <p className="font-bold">{car.year}</p>
-                        </div>
-                        <div className="bg-gray-50 rounded-xl p-4 text-center">
-                            <Gauge size={20} className="mx-auto text-primary mb-1" />
-                            <p className="text-sm text-gray-500">KMs</p>
-                            <p className="font-bold">{car.kms_driven?.toLocaleString()}</p>
-                        </div>
-                        <div className="bg-gray-50 rounded-xl p-4 text-center">
-                            <Fuel size={20} className="mx-auto text-primary mb-1" />
-                            <p className="text-sm text-gray-500">Fuel</p>
-                            <p className="font-bold">{car.fuelType}</p>
-                        </div>
-                    </div>
-
-                    <div className="mb-6">
-                        <CarScoreBar car={car} />
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <p className="text-sm text-gray-500">Price</p>
-                            <p className="text-3xl font-bold text-primary">₹{car.price}</p>
-                        </div>
-                        <button
-                            onClick={() => window.location.href = '/used'}
-                            className="bg-accent hover:bg-red-600 text-white font-bold px-8 py-3 rounded-full transition-colors"
-                        >
-                            View on {car.seller}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
     );
 };
 

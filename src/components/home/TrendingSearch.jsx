@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight, TrendingUp, Search, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 // Trending searches with seller platform links
 const TRENDING_SEARCHES = [
@@ -54,6 +55,7 @@ const TRENDING_SEARCHES = [
 ];
 
 const TrendingSearch = () => {
+    const navigate = useNavigate();
     const [startIndex, setStartIndex] = useState(0);
     const visibleCount = 4;
 
@@ -105,7 +107,7 @@ const TrendingSearch = () => {
                             key={item.id}
                             className="relative h-64 rounded-2xl overflow-hidden group cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2"
                             style={{ animationDelay: `${index * 0.1}s` }}
-                            onClick={() => window.location.href = `/used?search=${encodeURIComponent(item.name)}`}
+                            onClick={() => navigate(`/used?search=${encodeURIComponent(item.name)}`)}
                         >
                             {/* Image */}
                             <img

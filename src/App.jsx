@@ -1,8 +1,11 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import BackButtonHandler from './components/common/BackButtonHandler';
+import CitySelectionPopup from './components/common/CitySelectionPopup';
+import { hasCityBeenSelected } from './utils/cityStorage';
+import useVisitorTracker from './hooks/useVisitorTracker';
 import Home from './pages/Home';
 import UsedCars from './pages/UsedCars';
 import Ads from './pages/Ads';
@@ -12,13 +15,17 @@ import Signup from './pages/Signup';
 import Reviews from './pages/Reviews';
 import Careers from './pages/Careers';
 
-function App() {
+function AppContent({ showCityPopup, handleCitySelected }) {
+  const location = useLocation();
+  const isAuthPage = ['/login', '/signup'].includes(location.pathname);
+
   return (
-    <Router>
+    <>
       <BackButtonHandler />
+      {showCityPopup && !isAuthPage && <CitySelectionPopup onCitySelected={handleCitySelected} />}
       <div className="flex flex-col min-h-screen font-sans">
-        <Navbar />
-        <div className="flex-grow pt-[52px] sm:pt-[60px]">
+        {!isAuthPage && <Navbar />}
+        <div className={`flex-grow ${!isAuthPage ? 'pt-[52px] sm:pt-[60px]' : ''}`}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
@@ -34,8 +41,23 @@ function App() {
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>
-        <Footer />
+        {!isAuthPage && <Footer />}
       </div>
+    </>
+  );
+}
+
+function App() {
+  const [showCityPopup, setShowCityPopup] = useState(!hasCityBeenSelected());
+  useVisitorTracker();
+
+  const handleCitySelected = () => {
+    setShowCityPopup(false);
+  };
+
+  return (
+    <Router>
+      <AppContent showCityPopup={showCityPopup} handleCitySelected={handleCitySelected} />
     </Router>
   );
 }

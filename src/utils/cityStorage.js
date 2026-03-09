@@ -35,6 +35,19 @@ export const setSelectedCity = (city) => {
 };
 
 /**
+ * Check if a city has ever been selected by the user
+ * @returns {boolean} True if the user has previously selected a city
+ */
+export const hasCityBeenSelected = () => {
+    try {
+        return localStorage.getItem(CITY_STORAGE_KEY) !== null;
+    } catch (error) {
+        console.error('Error checking city in localStorage:', error);
+        return false;
+    }
+};
+
+/**
  * Clear the selected city (resets to default)
  */
 export const clearSelectedCity = () => {
@@ -45,4 +58,4 @@ export const clearSelectedCity = () => {
     }
 };
 
-export default { getSelectedCity, setSelectedCity, clearSelectedCity };
+export default { getSelectedCity, setSelectedCity, hasCityBeenSelected, clearSelectedCity };

@@ -3,10 +3,11 @@ import SidebarFilters from '../components/used/SidebarFilters';
 import CarListItem from '../components/used/CarListItem';
 import { LayoutGrid, List, ChevronLeft, ChevronRight, MapPin, X, Check, Scale, Filter } from 'lucide-react';
 import { searchCars, fetchCities } from '../services/masterDataService';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { getSelectedCity, setSelectedCity } from '../utils/cityStorage';
 import FunLoader from '../components/common/FunLoader';
 import CompareModal from '../components/compare/CompareModal';
+import CarDetailPopup from '../components/common/CarDetailPopup';
 import { CarScoreBar } from '../components/common/CarScore';
 
 const UsedCars = () => {
@@ -32,6 +33,7 @@ const UsedCars = () => {
     const [compareMode, setCompareMode] = useState(false);
     const [selectedCars, setSelectedCars] = useState([]);
     const [showCompareModal, setShowCompareModal] = useState(false);
+    const [selectedCarForPopup, setSelectedCarForPopup] = useState(null);
 
     const toggleCompareMode = () => {
         if (compareMode) {
@@ -55,8 +57,9 @@ const UsedCars = () => {
 
     // Handle URL parameters for initial load
     const routerLocation = useLocation();
+    const navigate = useNavigate();
 
-    // Check if city is selected on mount
+    // Check if city is selected on mount + listen for global city changes
     useEffect(() => {
         const loadCities = async () => {
             setCitiesLoading(true);
@@ -71,6 +74,24 @@ const UsedCars = () => {
         if (!savedCity) {
             setShowLocationPopup(true);
         }
+
+        // Listen for city changes from Navbar or CitySelectionPopup
+        const handleCityChange = (event) => {
+            if (event.detail) {
+                setFilters(prev => ({ ...prev, location: event.detail }));
+                setPage(1);
+
+                // Update the URL to reflect the new city
+                const params = new URLSearchParams(window.location.search);
+                params.set('city', event.detail);
+                navigate(`/used?${params.toString()}`, { replace: true });
+            }
+        };
+        window.addEventListener('cityChange', handleCityChange);
+
+        return () => {
+            window.removeEventListener('cityChange', handleCityChange);
+        };
     }, []);
 
     useEffect(() => {
@@ -412,6 +433,14 @@ const UsedCars = () => {
                 <CompareModal cars={selectedCars} onClose={() => setShowCompareModal(false)} />
             )}
 
+            {/* Car Detail Popup */}
+            {selectedCarForPopup && (
+                <CarDetailPopup
+                    car={selectedCarForPopup}
+                    onClose={() => setSelectedCarForPopup(null)}
+                />
+            )}
+
             {/* Mobile Filter Toggle - Floating Bottom Center - Only show when not loading AND not in compare mode */}
             {!loading && !compareMode && (
                 <div className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-bounce-in">
@@ -632,7 +661,15 @@ const UsedCars = () => {
                                                             >
                                                                 {isCarSelected(car.id) ? <Check size={16} /> : <Scale size={16} />}
                                                             </button>
-                                                            <button className={`hidden md:block text-xs ${sellerColors[seller]} text-white px-3 py-1.5 rounded-full transition-all hover:scale-105`}>
+                                                            <button
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    const sellers = ['Cars24', 'Spinny', 'CarWale', 'OLX'];
+                                                                    const s = sellers[car.id % sellers.length];
+                                                                    setSelectedCarForPopup({ ...car, seller: s });
+                                                                }}
+                                                                className={`hidden md:block text-xs ${sellerColors[seller]} text-white px-3 py-1.5 rounded-full transition-all hover:scale-105`}
+                                                            >
                                                                 View on {seller}
                                                             </button>
                                                         </div>

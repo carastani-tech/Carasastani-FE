@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Search, ChevronDown, X, Car, Calculator, Sparkles, CreditCard, Shield, ChevronRight, Check, Scale, Star } from 'lucide-react';
 import { fetchAllMasterData } from '../../services/masterDataService';
 import { getSelectedCity, setSelectedCity } from '../../utils/cityStorage';
@@ -93,6 +94,7 @@ const AnimatedTagline = () => {
 };
 
 const Hero = () => {
+    const navigate = useNavigate();
     const [masterData, setMasterData] = useState({
         manufacturers: [],
         bodyTypes: [],
@@ -137,7 +139,7 @@ const Hero = () => {
         Object.entries(searchForm).forEach(([key, value]) => {
             if (value) params.append(key, value);
         });
-        window.location.href = `/used?${params.toString()}`;
+        navigate(`/used?${params.toString()}`);
     };
 
     const handleBrandClick = (brandName) => {
@@ -145,7 +147,7 @@ const Hero = () => {
         const params = new URLSearchParams();
         params.append('manufacturer', searchName);
         if (searchForm.city) params.append('city', searchForm.city);
-        window.location.href = `/used?${params.toString()}`;
+        navigate(`/used?${params.toString()}`);
     };
 
     const SelectDropdown = ({ value, onChange, placeholder, options, disabled }) => (
@@ -366,7 +368,7 @@ const Hero = () => {
                                         ))}
                                     </div>
                                     <button
-                                        onClick={() => window.location.href = '/used'}
+                                        onClick={() => navigate('/used')}
                                         className="w-full mt-2 sm:mt-3 text-primary hover:text-secondary text-xs sm:text-sm font-semibold flex items-center justify-center gap-1 py-1.5 sm:py-2"
                                     >
                                         View All Cars

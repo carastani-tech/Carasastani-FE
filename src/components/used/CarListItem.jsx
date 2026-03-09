@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Fuel, Armchair, Gauge, Settings, Calendar, MapPin, ExternalLink, Star, Shield, ChevronRight, Heart, Share2, Scale, Check } from 'lucide-react';
 import { CarScoreBar } from '../common/CarScore';
+import CarDetailPopup from '../common/CarDetailPopup';
 
 // Seller platform configurations
 const SELLERS = ['Cars24', 'Spinny', 'CarWale', 'OLX', 'CarDekho', 'Droom'];
@@ -46,6 +47,8 @@ const SELLER_STYLES = {
 const CarListItem = ({ car, isSelected, onToggleCompare, compareMode }) => {
     const [isHovered, setIsHovered] = useState(false);
     const [isFavorite, setIsFavorite] = useState(false);
+    const [showDetailPopup, setShowDetailPopup] = useState(false);
+    const [shareCopied, setShareCopied] = useState(false);
 
     // Memoize seller - use car.seller if available, otherwise assign based on car.id for consistency
     const seller = useMemo(() => {
@@ -78,6 +81,29 @@ const CarListItem = ({ car, isSelected, onToggleCompare, compareMode }) => {
         if (typeof car.price === 'string') return car.price;
         return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(car.price);
     }, [car.price]);
+
+    // Share handler
+    const handleShare = async (e) => {
+        e.stopPropagation();
+        
+        const shareData = {
+            title: `Check out this ${car.name}`,
+            text: `I found this ${car.year} ${car.name} for ${formattedPrice} on Carastani!`,
+            url: window.location.href,
+        };
+
+        try {
+            if (navigator.share) {
+                await navigator.share(shareData);
+            } else {
+                await navigator.clipboard.writeText(`${shareData.text} ${shareData.url}`);
+                setShareCopied(true);
+                setTimeout(() => setShareCopied(false), 2000);
+            }
+        } catch (err) {
+            console.error('Error sharing:', err);
+        }
+    };
 
     return (
         <div
@@ -251,13 +277,25 @@ const CarListItem = ({ car, isSelected, onToggleCompare, compareMode }) => {
                                 {isSelected ? <Check size={16} /> : <Scale size={16} />}
                                 <span className="hidden sm:inline">{isSelected ? 'Added' : 'Compare'}</span>
                             </button>
-                            <button className="w-9 h-9 lg:w-10 lg:h-10 flex items-center justify-center text-gray-500 hover:text-primary bg-gray-100 hover:bg-gray-200 rounded-full transition-colors" title="Share">
-                                <Share2 size={18} />
-                            </button>
+                            <div className="relative">
+                                <button 
+                                    onClick={handleShare}
+                                    className="w-9 h-9 lg:w-10 lg:h-10 flex items-center justify-center text-gray-500 hover:text-primary bg-gray-100 hover:bg-gray-200 rounded-full transition-colors" 
+                                    title="Share"
+                                >
+                                    {shareCopied ? <Check size={18} className="text-green-500" /> : <Share2 size={18} />}
+                                </button>
+                                {/* Tooltip for copied state */}
+                                <div className={`absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[10px] font-bold px-2 py-1 rounded whitespace-nowrap transition-all duration-300 pointer-events-none ${shareCopied ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-2'}`}>
+                                    Copied!
+                                    <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-800"></div>
+                                </div>
+                            </div>
                         </div>
 
                         {/* Seller button with brand colors */}
                         <button
+                            onClick={(e) => { e.stopPropagation(); setShowDetailPopup(true); }}
                             className={`flex items-center gap-2 ${sellerStyle.bg} ${sellerStyle.text} font-bold px-4 lg:px-6 py-2 lg:py-2.5 rounded-full transition-all hover:shadow-lg hover:scale-105 text-xs lg:text-sm`}
                         >
                             <ExternalLink size={16} />
@@ -267,6 +305,14 @@ const CarListItem = ({ car, isSelected, onToggleCompare, compareMode }) => {
                     </div>
                 </div>
             </div>
+
+            {/* Car Detail Popup */}
+            {showDetailPopup && (
+                <CarDetailPopup
+                    car={{ ...car, seller }}
+                    onClose={() => setShowDetailPopup(false)}
+                />
+            )}
         </div>
     );
 };
