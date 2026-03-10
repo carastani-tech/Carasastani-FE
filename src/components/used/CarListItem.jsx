@@ -132,37 +132,23 @@ const CarListItem = ({ car, isSelected, onToggleCompare, compareMode }) => {
                             className="absolute top-3 left-3 z-10 flex items-center gap-2 cursor-pointer group"
                             onClick={(e) => e.stopPropagation()}
                         >
-                            <div className={`relative w-7 h-7 rounded-xl flex items-center justify-center transition-all duration-300 transform ${isSelected
+                            <div className={`relative w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 transform ${isSelected
                                 ? 'bg-gradient-to-br from-primary to-primary/80 text-white shadow-lg scale-105 rotate-0'
-                                : 'bg-white/95 backdrop-blur-md border-2 border-gray-200 text-gray-400 hover:border-primary hover:scale-110 hover:rotate-6'
+                                : 'bg-white/95 backdrop-blur-md border border-gray-200 text-gray-400 hover:border-primary hover:scale-110 hover:rotate-6'
                                 }`}>
                                 {/* Inner circle for unselected state */}
                                 {!isSelected && (
-                                    <div className="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-primary transition-colors"></div>
+                                    <div className="w-4 h-4 rounded-full border-2 border-gray-300 group-hover:border-primary transition-colors"></div>
                                 )}
 
                                 {/* Checkmark for selected state */}
                                 {isSelected && (
-                                    <svg
-                                        width="20"
-                                        height="20"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        className="animate-bounce-in"
-                                    >
-                                        <path
-                                            d="M5 13l4 4L19 7"
-                                            stroke="currentColor"
-                                            strokeWidth="3"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        />
-                                    </svg>
+                                    <Check size={14} strokeWidth={3} className="animate-bounce-in" />
                                 )}
 
                                 {/* Glow effect for selected state */}
                                 {isSelected && (
-                                    <div className="absolute inset-0 rounded-xl bg-primary/20 animate-pulse"></div>
+                                    <div className="absolute inset-0 rounded-full bg-primary/20 animate-pulse"></div>
                                 )}
                             </div>
                             <input
@@ -219,7 +205,7 @@ const CarListItem = ({ car, isSelected, onToggleCompare, compareMode }) => {
                                         <span className="text-sm font-semibold text-gray-700">{rating}</span>
                                     </div>
                                     <span className="text-xs text-gray-400">|</span>
-                                    <span className="text-sm text-gray-500">{car.bodyType}</span>
+                                    <span className="text-sm text-gray-500 capitalize">{car.bodyType}</span>
                                 </div>
                             </div>
 
@@ -240,17 +226,17 @@ const CarListItem = ({ car, isSelected, onToggleCompare, compareMode }) => {
                             <div className="bg-gray-50 rounded-xl p-2 lg:p-3 text-center transition-colors group-hover:bg-gray-100">
                                 <Fuel size={16} className="mx-auto text-primary mb-1" />
                                 <p className="text-xs text-gray-500">Fuel</p>
-                                <p className="text-xs lg:text-sm font-semibold">{car.fuelType || car.fuel_type}</p>
+                                <p className="text-xs lg:text-sm font-semibold capitalize">{car.fuelType || car.fuel_type}</p>
                             </div>
                             <div className="bg-gray-50 rounded-xl p-2 lg:p-3 text-center transition-colors group-hover:bg-gray-100">
                                 <Settings size={16} className="mx-auto text-primary mb-1" />
                                 <p className="text-xs text-gray-500">Transmission</p>
-                                <p className="text-xs lg:text-sm font-semibold">{car.transmission || 'Manual'}</p>
+                                <p className="text-xs lg:text-sm font-semibold capitalize">{car.transmission || 'Manual'}</p>
                             </div>
                             <div className="bg-gray-50 rounded-xl p-2 lg:p-3 text-center transition-colors group-hover:bg-gray-100">
                                 <MapPin size={16} className="mx-auto text-primary mb-1" />
                                 <p className="text-xs text-gray-500">Location</p>
-                                <p className="text-xs lg:text-sm font-semibold truncate">{car.location || 'India'}</p>
+                                <p className="text-xs lg:text-sm font-semibold truncate capitalize">{car.location || 'India'}</p>
                             </div>
                         </div>
                     </div>

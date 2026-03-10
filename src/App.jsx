@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import BackButtonHandler from './components/common/BackButtonHandler';
@@ -56,9 +57,11 @@ function App() {
   };
 
   return (
-    <Router>
-      <AppContent showCityPopup={showCityPopup} handleCitySelected={handleCitySelected} />
-    </Router>
+    <HelmetProvider>
+      <Router>
+        <AppContent showCityPopup={showCityPopup} handleCitySelected={handleCitySelected} />
+      </Router>
+    </HelmetProvider>
   );
 }
 

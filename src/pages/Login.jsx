@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Loader2, Eye, EyeOff, AlertCircle, CheckCircle, Mail, Lock, ArrowLeft } from 'lucide-react';
 import { loginUser } from '../services/authService';
+import SEO from '../components/common/SEO';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -58,6 +59,10 @@ const Login = () => {
 
     return (
         <div className="min-h-screen relative flex items-center justify-center p-4 sm:p-8 overflow-hidden bg-black">
+            <SEO 
+                title="Log In" 
+                description="Securely log in to your Carastani account to access your saved cars and personalized recommendations." 
+            />
             {/* Back to Home Button */}
             <Link 
                 to="/" 
@@ -110,7 +115,7 @@ const Login = () => {
                     ) : (
                         <>
                             <div className="mb-8 text-center">
-                                <h2 className="text-2xl font-bold text-white">Welcome Back</h2>
+                                <h1 className="text-2xl font-bold text-white">Welcome Back</h1>
                                 <p className="text-white/50 text-sm mt-1.5">Enter your credentials to continue</p>
                             </div>
 

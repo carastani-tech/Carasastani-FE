@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Loader2, Eye, EyeOff, AlertCircle, CheckCircle, User, Mail, Lock, ArrowLeft } from 'lucide-react';
 import { signupUser } from '../services/authService';
+import SEO from '../components/common/SEO';
 
 const Signup = () => {
     const navigate = useNavigate();
@@ -108,6 +109,10 @@ const Signup = () => {
 
     return (
         <div className="min-h-screen relative flex items-center justify-center p-4 sm:p-8 overflow-hidden bg-black">
+            <SEO 
+                title="Sign Up" 
+                description="Create a free Carastani account to unlock premium features like saving your favorite cars and receiving personalized recommendations." 
+            />
             {/* Back to Home Button */}
             <Link 
                 to="/" 
@@ -160,7 +165,7 @@ const Signup = () => {
                     ) : (
                         <>
                             <div className="mb-6 text-center">
-                                <h2 className="text-2xl font-bold text-white">Create Account</h2>
+                                <h1 className="text-2xl font-bold text-white">Create Account</h1>
                             </div>
 
                             {/* Email Exists Message */}

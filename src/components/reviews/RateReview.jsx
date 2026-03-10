@@ -50,7 +50,7 @@ const RateReview = () => {
                     <p className="text-gray-500 text-sm mb-6">Your review has been submitted successfully. It will appear on the page shortly.</p>
                     <button
                         onClick={() => setSubmitted(false)}
-                        className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg text-sm font-medium transition-colors"
+                        className="bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded-lg text-sm font-medium transition-colors"
                     >
                         Write Another Review
                     </button>
@@ -103,7 +103,7 @@ const RateReview = () => {
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             placeholder="Enter your name"
-                            className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                            className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                         />
                     </div>
                     <div>
@@ -113,7 +113,7 @@ const RateReview = () => {
                             value={location}
                             onChange={(e) => setLocation(e.target.value)}
                             placeholder="e.g. Mumbai, Delhi"
-                            className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                            className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                         />
                     </div>
                 </div>
@@ -126,7 +126,7 @@ const RateReview = () => {
                         onChange={(e) => setContent(e.target.value)}
                         placeholder="Tell us about your experience..."
                         rows={4}
-                        className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none"
+                        className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
                     />
                 </div>
 
@@ -134,7 +134,7 @@ const RateReview = () => {
                 <button
                     onClick={handleSubmit}
                     disabled={!content.trim() || !username.trim() || rating === 0 || submitting}
-                    className="bg-red-500 hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-8 py-3 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+                    className="bg-primary hover:bg-primary/90 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-8 py-3 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
                 >
                     <Send size={16} />
                     {submitting ? 'Submitting...' : 'Submit Review'}

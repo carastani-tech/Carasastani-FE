@@ -355,7 +355,7 @@ const UsedCarsPreview = () => {
                                                 ? 'bg-primary border-primary text-white'
                                                 : 'bg-white/90 border-gray-300 hover:border-primary'}`}
                                         >
-                                            {isSelected && <Check size={12} />}
+                                            {isSelected && <Check size={12} strokeWidth={3} className="text-white" />}
                                         </button>
 
                                         {/* Seller Badge */}

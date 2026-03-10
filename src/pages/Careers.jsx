@@ -17,6 +17,7 @@ import {
     GraduationCap,
     X
 } from 'lucide-react';
+import SEO from '../components/common/SEO';
 
 // Job openings data
 const jobOpenings = [
@@ -141,6 +142,10 @@ const Careers = () => {
 
     return (
         <div className="min-h-screen bg-gray-50">
+            <SEO 
+                title="Careers" 
+                description="Join the Carastani team and help us build the future of car comparing and buying in India." 
+            />
             {/* Hero Section */}
             <section className="relative bg-gradient-to-br from-secondary via-secondary to-primary py-24 overflow-hidden">
                 <div className="absolute inset-0">

@@ -129,7 +129,7 @@ const Navbar = () => {
         { to: '/home', label: 'Home' },
         { to: '/used', label: 'Used Cars' },
         { to: '/dealers', label: 'Dealership' },
-        { to: '/ads', label: 'Ads' },
+        // { to: '/ads', label: 'Ads' },
         { to: '/reviews', label: 'Reviews' },
     ];
 
@@ -146,7 +146,7 @@ const Navbar = () => {
 
                 {/* Left Links - Desktop */}
                 <div className="hidden md:flex items-center gap-6 lg:gap-8 text-xs uppercase tracking-wider">
-                    {navLinks.slice(0, 4).map(link => (
+                    {navLinks.map(link => (
                         <Link key={link.to} to={link.to} className="hover:text-accent transition-colors">
                             {link.label}
                         </Link>
@@ -162,8 +162,6 @@ const Navbar = () => {
 
                 {/* Right Actions */}
                 <div className="flex items-center gap-2 sm:gap-4 md:gap-6 lg:gap-8 text-xs uppercase tracking-wider">
-                    {/* Reviews - Desktop */}
-                    <Link to="/reviews" className="hidden md:block hover:text-accent transition-colors">Reviews</Link>
 
                     {/* City Dropdown */}
                     <div className="relative" ref={dropdownRef}>

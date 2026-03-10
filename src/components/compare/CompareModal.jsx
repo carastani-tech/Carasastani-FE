@@ -167,81 +167,95 @@ const CompareModal = ({ cars, onClose }) => {
                     </button>
                 </div>
 
-                {/* Car Header Cards - Sticky */}
-                <div className="shrink-0 bg-gradient-to-b from-gray-50 to-white px-3 sm:px-6 py-4 sm:py-5 border-b border-gray-100">
-                    <div className={`grid gap-3 sm:gap-4`} style={{ gridTemplateColumns: `repeat(${cars.length}, 1fr)` }}>
-                        {carScores.map((car, index) => {
-                            const isBest = index === bestCarIndex;
-                            return (
-                                <div
-                                    key={index}
-                                    className={`relative rounded-2xl p-3 sm:p-4 transition-all duration-300 ${
-                                        isBest
-                                            ? 'bg-gradient-to-br from-primary/5 to-teal-50 border-2 border-primary/30 shadow-lg shadow-primary/10'
-                                            : 'bg-white border border-gray-200/80 shadow-sm hover:shadow-md'
-                                    }`}
-                                >
-                                    {/* Best Badge */}
-                                    {isBest && (
-                                        <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 z-10">
-                                            <span className="bg-gradient-to-r from-primary to-teal-500 text-white text-[10px] sm:text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 shadow-lg shadow-primary/25 whitespace-nowrap">
-                                                <Trophy size={11} /> Best Pick
-                                            </span>
-                                        </div>
-                                    )}
+                {/* Scrollable Container for both Headers and Data */}
+                <div className="flex-1 overflow-auto min-h-0 relative bg-white pb-2">
+                    <table className="w-full min-w-max border-separate border-spacing-0">
+                        {/* Car Header Cards - Scroll Normally */}
+                        <thead className="shadow-sm">
+                            <tr>
+                                {/* Empty header cell above the labels, sticky left */}
+                                <th className="sticky left-0 z-40 bg-white border-b border-gray-100 w-32 sm:w-40 px-4 sm:px-6 py-4">
+                                    {/* Invisible placeholder for layout */}
+                                </th>
+                                
+                                {carScores.map((car, index) => {
+                                    const isBest = index === bestCarIndex;
+                                    return (
+                                        <th
+                                            key={index}
+                                            className="w-48 sm:w-64 p-3 sm:p-4 border-b border-gray-100 align-top font-normal bg-white"
+                                        >
+                                            <div
+                                                className={`relative rounded-2xl p-3 sm:p-4 h-full flex flex-col transition-all duration-300 ${
+                                                    isBest
+                                                        ? 'bg-gradient-to-br from-primary/5 to-teal-50 border-2 border-primary/30 shadow-lg shadow-primary/10'
+                                                        : 'bg-white border border-gray-200 shadow-sm hover:shadow-md'
+                                                }`}
+                                            >
+                                                {/* Best Badge */}
+                                                {isBest && (
+                                                    <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 z-10">
+                                                        <span className="bg-gradient-to-r from-primary to-teal-500 text-white text-[10px] sm:text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 shadow-md shadow-primary/25 whitespace-nowrap">
+                                                            <Trophy size={11} /> Best Pick
+                                                        </span>
+                                                    </div>
+                                                )}
 
-                                    {/* Car Thumbnail + Info (compact) */}
-                                    <div className="flex items-center gap-2.5 mb-2.5">
-                                        <div className="w-12 h-12 sm:w-14 sm:h-14 shrink-0 bg-gradient-to-br from-gray-100 to-gray-50 rounded-lg overflow-hidden">
-                                            <img
-                                                src={car.image}
-                                                alt={car.name}
-                                                className="w-full h-full object-cover"
-                                                onError={(e) => {
-                                                    e.target.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><rect fill="%23f3f4f6" width="48" height="48"/><text x="50%" y="50%" fill="%239ca3af" font-size="8" text-anchor="middle" dy=".3em">N/A</text></svg>';
-                                                }}
-                                            />
-                                        </div>
-                                        <div className="min-w-0 flex-1">
-                                            <h3 className="font-bold text-gray-900 text-xs sm:text-sm leading-tight truncate">
-                                                {car.name}
-                                            </h3>
-                                            <p className="text-[10px] sm:text-xs text-gray-400 truncate">
-                                                {car.year} • {car.fuel_type || 'N/A'}
-                                            </p>
-                                        </div>
-                                    </div>
+                                                {/* Car Thumbnail + Info */}
+                                                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-2.5 mb-3">
+                                                    <div className="w-16 h-12 sm:w-20 sm:h-14 shrink-0 bg-gray-50 rounded-lg overflow-hidden border border-gray-100">
+                                                        <img
+                                                            src={car.image}
+                                                            alt={car.name}
+                                                            className="w-full h-full object-cover"
+                                                            onError={(e) => {
+                                                                e.target.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><rect fill="%23f3f4f6" width="48" height="48"/><text x="50%" y="50%" fill="%239ca3af" font-size="8" text-anchor="middle" dy=".3em">N/A</text></svg>';
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <div className="min-w-0 flex-1 text-center sm:text-left">
+                                                        <h3 className="font-bold text-gray-900 text-xs sm:text-sm leading-tight line-clamp-2">
+                                                            {car.name}
+                                                        </h3>
+                                                        <p className="text-[10px] sm:text-xs text-gray-400 truncate mt-0.5">
+                                                            {car.year} • {car.fuel_type || 'N/A'}
+                                                        </p>
+                                                    </div>
+                                                </div>
 
-                                    {/* Score Bar */}
-                                    <ScoreBar
-                                        score={car.scoreData.score}
-                                        color={car.scoreData.gradeColor}
-                                        isBest={isBest}
-                                    />
-                                </div>
-                            );
-                        })}
-                    </div>
-                </div>
+                                                {/* Score Bar */}
+                                                <div className="mt-auto">
+                                                    <ScoreBar
+                                                        score={car.scoreData.score}
+                                                        color={car.scoreData.gradeColor}
+                                                        isBest={isBest}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </th>
+                                    );
+                                })}
+                            </tr>
+                        </thead>
 
-                {/* Specs Table */}
-                <div className="flex-1 overflow-y-auto overflow-x-auto min-h-0">
-                    <table className="w-full">
+                        {/* Specs Table Body */}
                         <tbody>
                             {visibleSpecs.map((spec, rowIndex) => {
                                 const bestIdx = getBestIndex(spec);
+                                const isEven = rowIndex % 2 === 0;
+                                const rowBg = isEven ? 'bg-white' : 'bg-gray-50/50';
+                                const stickyBg = isEven ? 'bg-white' : 'bg-[#f8fafc]'; // Solid color for sticky to prevent transparency overlap
+                                
                                 return (
                                     <tr
                                         key={spec.key}
-                                        className={`border-b border-gray-100 last:border-b-0 transition-colors duration-150 hover:bg-gray-50/80 ${
-                                            rowIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50/40'
-                                        }`}
+                                        className={`transition-colors duration-150 hover:bg-gray-50 ${rowBg}`}
                                     >
-                                        {/* Label */}
-                                        <td className="px-4 sm:px-6 py-3.5 sm:py-4 w-32 sm:w-40">
-                                            <div className="flex items-center gap-2.5">
+                                        {/* Label - Sticky Left */}
+                                        <td className={`sticky left-0 z-20 px-4 sm:px-6 py-3.5 sm:py-4 border-b border-gray-100 ${stickyBg}`}>
+                                            <div className="flex items-center gap-2 sm:gap-2.5">
                                                 <span className="text-base sm:text-lg">{spec.icon}</span>
-                                                <span className="font-semibold text-gray-600 text-xs sm:text-sm">{spec.label}</span>
+                                                <span className="font-semibold text-gray-600 text-xs sm:text-sm whitespace-nowrap">{spec.label}</span>
                                             </div>
                                         </td>
 
@@ -253,17 +267,17 @@ const CompareModal = ({ cars, onClose }) => {
                                             return (
                                                 <td
                                                     key={idx}
-                                                    className={`px-3 sm:px-4 py-3.5 sm:py-4 text-center transition-colors duration-200`}
+                                                    className="px-3 sm:px-4 py-3.5 sm:py-4 text-center border-b border-gray-100 transition-colors duration-200"
                                                 >
                                                     <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs sm:text-sm font-medium ${
                                                         isBest
                                                             ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200'
                                                             : isNA
-                                                            ? 'text-gray-300'
+                                                            ? 'text-gray-400'
                                                             : 'text-gray-800'
                                                     }`}>
                                                         {value}
-                                                        {isBest && <Check size={13} className="text-emerald-500" strokeWidth={3} />}
+                                                        {isBest && <Check size={13} className="text-emerald-500 shrink-0" strokeWidth={3} />}
                                                     </div>
                                                 </td>
                                             );

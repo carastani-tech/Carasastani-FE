@@ -9,6 +9,7 @@ import FunLoader from '../components/common/FunLoader';
 import CompareModal from '../components/compare/CompareModal';
 import CarDetailPopup from '../components/common/CarDetailPopup';
 import { CarScoreBar } from '../components/common/CarScore';
+import SEO from '../components/common/SEO';
 
 const UsedCars = () => {
     // State for cars and loading
@@ -26,6 +27,7 @@ const UsedCars = () => {
 
     // Location popup
     const [showLocationPopup, setShowLocationPopup] = useState(false);
+    const [sortBy, setSortBy] = useState('relevance');
     const [cities, setCities] = useState([]);
     const [citiesLoading, setCitiesLoading] = useState(true);
 
@@ -494,7 +496,7 @@ const UsedCars = () => {
                         <div className="flex flex-col gap-3 md:gap-4">
                             {/* Top row - Title and location */}
                             <div className="flex flex-wrap items-center gap-2">
-                                <h2 className="text-base md:text-lg font-bold text-gray-800 mr-2">
+                                <h1 className="text-base md:text-lg font-bold text-gray-800 mr-2">
                                     {loading ? (
                                         <span className="text-gray-400">Searching...</span>
                                     ) : (
@@ -502,7 +504,7 @@ const UsedCars = () => {
                                             <span className="text-accent">{cars.length}</span> Cars found
                                         </>
                                     )}
-                                </h2>
+                                </h1>
                                 {filters.location && (
                                     <button
                                         onClick={() => setShowLocationPopup(true)}
@@ -526,6 +528,21 @@ const UsedCars = () => {
                                 </div>
 
                                 <div className="flex items-center gap-2">
+                                    {/* Sort By Dropdown */}
+                                    <div className="relative">
+                                        <select
+                                            value={sortBy}
+                                            onChange={(e) => setSortBy(e.target.value)}
+                                            className="appearance-none bg-white border border-gray-200 text-gray-700 text-sm rounded-lg px-3 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors cursor-pointer font-medium"
+                                        >
+                                            <option value="relevance">Relevance</option>
+                                            <option value="price_asc">Price: Low to High</option>
+                                            <option value="price_desc">Price: High to Low</option>
+                                            <option value="year_desc">Newest First</option>
+                                        </select>
+                                        <ChevronDown size={14} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
+                                    </div>
+
                                     {/* Compare Mode Toggle Button */}
                                     <button
                                         onClick={toggleCompareMode}
@@ -539,16 +556,16 @@ const UsedCars = () => {
                                     </button>
 
                                     {/* View Toggle */}
-                                    <div className="flex items-center gap-1 bg-gray-100 p-1 rounded-lg">
+                                    <div className="flex items-center gap-1 bg-gray-100 p-0.5 rounded-lg border border-gray-100">
                                         <button
                                             onClick={() => setViewType('grid')}
-                                            className={`p-2 rounded-lg transition-all ${viewType === 'grid' ? 'bg-white shadow text-primary' : 'text-gray-500 hover:text-gray-700'}`}
+                                            className={`px-2.5 py-1.5 rounded-md transition-all ${viewType === 'grid' ? 'bg-white shadow-sm text-primary' : 'text-gray-500 hover:text-gray-700'}`}
                                         >
                                             <LayoutGrid size={18} />
                                         </button>
                                         <button
                                             onClick={() => setViewType('list')}
-                                            className={`p-2 rounded-lg transition-all ${viewType === 'list' ? 'bg-white shadow text-primary' : 'text-gray-500 hover:text-gray-700'}`}
+                                            className={`px-2.5 py-1.5 rounded-md transition-all ${viewType === 'list' ? 'bg-white shadow-sm text-primary' : 'text-gray-500 hover:text-gray-700'}`}
                                         >
                                             <List size={18} />
                                         </button>
@@ -561,13 +578,30 @@ const UsedCars = () => {
                     {/* Car List/Grid */}
                     {loading ? (
                         <div className="min-h-[400px]"></div>
-                    ) : cars.length > 0 ? (
-                        <div className={viewType === 'grid'
-                            ? 'grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6'
-                            : 'space-y-4 md:space-y-6'
-                        }>
-                            {cars.map(car => (
-                                <div key={car.id} className="relative">
+                    ) : cars.length > 0 ? (() => {
+                        // Apply sorting logic
+                        const sortedCars = [...cars].sort((a, b) => {
+                            if (sortBy === 'price_asc') {
+                                return (a.price || 0) - (b.price || 0);
+                            } else if (sortBy === 'price_desc') {
+                                return (b.price || 0) - (a.price || 0);
+                            } else if (sortBy === 'year_desc') {
+                                // Extract year from title or use a default if not available
+                                const yearA = parseInt(a.title?.substring(0, 4)) || a.buildYear || 0;
+                                const yearB = parseInt(b.title?.substring(0, 4)) || b.buildYear || 0;
+                                return yearB - yearA;
+                            }
+                            // 'relevance' or default -> original order
+                            return 0;
+                        });
+
+                        return (
+                            <div className={viewType === 'grid'
+                                ? 'grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6'
+                                : 'space-y-4 md:space-y-6'
+                            }>
+                                {sortedCars.map(car => (
+                                    <div key={car.id} className="relative">
 
                                     {viewType === 'grid' ? (() => {
                                         const sellers = ['Cars24', 'Spinny', 'CarWale', 'OLX'];
@@ -680,15 +714,16 @@ const UsedCars = () => {
                                     })() : (
                                         <CarListItem
                                             car={car}
-                                            isSelected={isCarSelected(car.id)}
-                                            onToggleCompare={toggleCarSelection}
                                             compareMode={compareMode}
+                                            isSelected={isCarSelected(car.id)}
+                                            onToggleSelection={() => toggleCarSelection(car)}
                                         />
                                     )}
                                 </div>
                             ))}
                         </div>
-                    ) : (
+                        );
+                    })() : (
                         <div className="text-center py-12 text-gray-500 bg-white rounded-xl border border-gray-100">
                             <h3 className="text-lg font-bold mb-2">No cars found</h3>
                             <p>Try adjusting your filters to find what you're looking for.</p>

@@ -3,21 +3,21 @@ import React from 'react';
 const Brands = () => {
     // Car brand logos - expanded list
     const brands = [
-        { name: 'BMW', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/BMW.svg/2048px-BMW.svg.png' },
-        { name: 'Mercedes', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Mercedes-Logo.svg/1024px-Mercedes-Logo.svg.png' },
-        { name: 'Audi', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Audi-Logo_2016.svg/2560px-Audi-Logo_2016.svg.png' },
-        { name: 'Toyota', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Toyota_EU.svg/2560px-Toyota_EU.svg.png' },
-        { name: 'Honda', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Honda.svg/2560px-Honda.svg.png' },
-        { name: 'Hyundai', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Hyundai_Motor_Company_logo.svg/2560px-Hyundai_Motor_Company_logo.svg.png' },
-        { name: 'Maruti Suzuki', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Suzuki_logo_2.svg/2560px-Suzuki_logo_2.svg.png' },
-        { name: 'Tata', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Tata_logo.svg/2560px-Tata_logo.svg.png' },
-        { name: 'Mahindra', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Mahindra_Wordmark.svg/2560px-Mahindra_Wordmark.svg.png' },
-        { name: 'Kia', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Kia-logo.svg/2560px-Kia-logo.svg.png' },
-        { name: 'Volkswagen', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Volkswagen_logo_2019.svg/2048px-Volkswagen_logo_2019.svg.png' },
-        { name: 'Skoda', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Skoda_Wordmark_2022.svg/2560px-Skoda_Wordmark_2022.svg.png' },
-        { name: 'Ford', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Ford_Motor_Company_Logo.svg/2560px-Ford_Motor_Company_Logo.svg.png' },
-        { name: 'Jeep', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Jeep_logo.svg/2560px-Jeep_logo.svg.png' },
-        { name: 'MG', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/MG_Motor_UK_Logo.svg/2560px-MG_Motor_UK_Logo.svg.png' },
+        { name: 'BMW', logo: 'https://www.carlogos.org/car-logos/bmw-logo.png' },
+        { name: 'Mercedes', logo: 'https://www.carlogos.org/car-logos/mercedes-benz-logo.png' },
+        { name: 'Audi', logo: 'https://www.carlogos.org/car-logos/audi-logo.png' },
+        { name: 'Toyota', logo: 'https://www.carlogos.org/car-logos/toyota-logo.png' },
+        { name: 'Honda', logo: 'https://www.carlogos.org/car-logos/honda-logo.png' },
+        { name: 'Hyundai', logo: 'https://www.carlogos.org/car-logos/hyundai-logo.png' },
+        { name: 'Maruti Suzuki', logo: 'https://www.carlogos.org/car-logos/maruti-suzuki-logo.png' },
+        { name: 'Tata', logo: 'https://www.carlogos.org/car-logos/tata-logo.png' },
+        { name: 'Mahindra', logo: 'https://www.carlogos.org/car-logos/mahindra-logo.png' },
+        { name: 'Kia', logo: 'https://www.carlogos.org/car-logos/kia-logo.png' },
+        { name: 'Volkswagen', logo: 'https://www.carlogos.org/car-logos/volkswagen-logo.png' },
+        { name: 'Skoda', logo: 'https://www.carlogos.org/car-logos/skoda-logo.png' },
+        { name: 'Ford', logo: 'https://www.carlogos.org/car-logos/ford-logo.png' },
+        { name: 'Jeep', logo: 'https://www.carlogos.org/car-logos/jeep-logo.png' },
+        { name: 'MG', logo: 'https://www.carlogos.org/car-logos/mg-logo.png' },
     ];
 
     // Duplicate the brands array for seamless infinite loop
@@ -44,13 +44,18 @@ const Brands = () => {
                             key={`${brand.name}-${index}`}
                             className="flex-shrink-0 mx-8 md:mx-12 group cursor-pointer"
                         >
-                            <div className="h-16 w-24 md:w-32 flex items-center justify-center grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-300 hover:scale-110">
+                            <div className="h-16 w-24 md:w-32 flex flex-col items-center justify-center grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-300 hover:scale-110">
                                 <img
                                     src={brand.logo}
                                     alt={brand.name}
                                     className="max-h-full max-w-full object-contain"
                                     loading="lazy"
+                                    onError={(e) => {
+                                        e.target.style.display = 'none';
+                                        e.target.nextSibling.style.display = 'block';
+                                    }}
                                 />
+                                <span className="hidden text-sm font-bold text-gray-700">{brand.name}</span>
                             </div>
                         </div>
                     ))}
