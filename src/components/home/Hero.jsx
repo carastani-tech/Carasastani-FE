@@ -125,6 +125,16 @@ const Hero = () => {
             setLoading(false);
         };
         loadMasterData();
+
+        // Listen for internal city changes from the Navbar
+        const handleCitySync = (event) => {
+            if (event.detail) {
+                setSearchForm(prev => ({ ...prev, city: event.detail }));
+            }
+        };
+
+        window.addEventListener('cityChange', handleCitySync);
+        return () => window.removeEventListener('cityChange', handleCitySync);
     }, []);
 
     const handleInputChange = (field, value) => {
