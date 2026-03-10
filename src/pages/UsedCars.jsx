@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import SidebarFilters from '../components/used/SidebarFilters';
 import CarListItem from '../components/used/CarListItem';
-import { LayoutGrid, List, ChevronLeft, ChevronRight, MapPin, X, Check, Scale, Filter } from 'lucide-react';
+import { LayoutGrid, List, ChevronLeft, ChevronRight, ChevronDown, MapPin, X, Check, Scale, Filter } from 'lucide-react';
 import { searchCars, fetchCities } from '../services/masterDataService';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { getSelectedCity, setSelectedCity } from '../utils/cityStorage';
