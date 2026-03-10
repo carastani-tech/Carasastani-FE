@@ -716,7 +716,7 @@ const UsedCars = () => {
                                             car={car}
                                             compareMode={compareMode}
                                             isSelected={isCarSelected(car.id)}
-                                            onToggleSelection={() => toggleCarSelection(car)}
+                                            onToggleCompare={() => toggleCarSelection(car)}
                                         />
                                     )}
                                 </div>

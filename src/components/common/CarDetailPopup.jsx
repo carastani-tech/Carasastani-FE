@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { X, ExternalLink, MapPin, Fuel, Gauge, Settings, Calendar, Star, Shield, Share2, Heart, Car, Check } from 'lucide-react';
